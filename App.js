@@ -1,25 +1,23 @@
+import 'react-native-gesture-handler'
 import React from 'react'
-import Home from './screens/Home'
 import { StatusBar } from 'react-native'
-import SignUp from './screens/SignUp'
-import SignIn from './screens/SignIn'
-import Cities from './screens/Cities'
 import { applyMiddleware, createStore } from 'redux'
 import { Provider } from 'react-redux'
 import thunk from 'redux-thunk'
 import mainReducer from './redux/reducers/mainReducer'
+import { NavigationContainer } from '@react-navigation/native'
+import Drawer from './navigation/Drawer'
 
 const myStore = createStore(mainReducer, applyMiddleware(thunk))
 
-const App = () => {
+const App = (props) => {
   return (
     <>
       <Provider store={myStore}>
-        <StatusBar />
-        {/*       <Home /> */}
-        {/*       <SignUp /> */}
-        {/*       <SignIn /> */}
-        <Cities />
+        <NavigationContainer>
+          <StatusBar />
+          <Drawer />
+        </NavigationContainer>
       </Provider>
     </>
   )

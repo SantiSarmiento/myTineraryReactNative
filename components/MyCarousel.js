@@ -2,6 +2,7 @@ import Carousel from 'react-native-snap-carousel'
 import { ImageBackground, Text, View, Image } from 'react-native'
 import React from 'react'
 
+
 const MyCarousel = () => {
 
     const cities = [
@@ -19,10 +20,14 @@ const MyCarousel = () => {
         { name: "Tokyo", id: 12, photo: "../assets/cities/tokyo.png" },
     ]
 
+
+
     _renderItem = ({ item, index }) => {
         console.log(item)
+/*         const img = require(item.photo) */
         return (
             <View key={item.id}>
+{/*                 <Image source={img} style={styles} /> */}
                 <Text>{item.name}</Text>
             </View>
         );
