@@ -6,7 +6,7 @@ import authorReducer from './authorReducer'
 const mainReducer = combineReducers({
     cities: cityReducer,
     itineraries: itineraryReducer,
-    userLogged: authorReducer,
+    authorReducer,
 })
 
 export default mainReducer

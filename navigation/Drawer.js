@@ -1,64 +1,89 @@
-import { createDrawerNavigator, DrawerItem } from '@react-navigation/drawer'
-import React from 'react'
-import Cities from '../screens/Cities'
-import Home from '../screens/Home'
-import Stack from './Stack'
+import React, { useState } from 'react'
+import { createDrawerNavigator, DrawerItem, DrawerContentScrollView } from '@react-navigation/drawer'
 import { Icon } from 'react-native-elements'
 import { View, Text, StyleSheet, Image } from 'react-native'
-import { DrawerContentScrollView, DrawerItemList } from '@react-navigation/drawer'
+import { connect } from 'react-redux'
+
+import Cities from '../screens/Cities'
+import Home from '../screens/Home'
+import SignUp from '../screens/SignUp'
+import SignIn from '../screens/SignIn'
+import authorActions from '../redux/actions/authorActions'
 
 const drawer = createDrawerNavigator()
 
-function CustomDrawerContent(props) {
+const CustomDrawerContent = ({ props, user, signOut }) => {
     return (
         <View style={styles.drawer}>
             <View style={styles.userHeader}>
-                <Image source={require('../assets/otherImg/login.png')} style={styles.userLogo} />
+                {user ? <Image source={{ uri: user.photoUrl }} style={styles.userLogged} /> : <Image source={require('../assets/otherImg/login.png')} style={styles.userLogo} />}
+                {user && <Text>{user.firstName}</Text>}
             </View>
             <DrawerContentScrollView {...props}>
-                <DrawerItemList
-                    {...props}
-                    activeBackgroundColor='#6685A4'
+                <DrawerItem
+                    label="Home"
+                    icon={() => (
+                        <Icon
+                            name='home'
+                            type='material'
+                            color='white'
+                        />)}
                     labelStyle={{ color: 'white' }}
+                    onPress={() => props.navigation.navigate('Home')}
+                />
+                <DrawerItem
+                    label="Cities"
+                    icon={() => (
+                        <Icon
+                            name='public'
+                            type='material'
+                            color='white'
+                        />)}
+                    labelStyle={{ color: 'white' }}
+                    onPress={() => props.navigation.navigate('Cities')}
                 />
             </DrawerContentScrollView>
-            <DrawerItem
-                label="Sign Out"
-                labelStyle={{ color: 'white' }}
-                icon={() => (
-                    <Icon
-                        name='logout'
-                        type='material'
-                        color='white'
-                    />
-                )}
-            />
+            {user
+                ?
+                <DrawerItem
+                    onPress={signOut}
+                    label="Sign Out"
+                    labelStyle={{ color: 'white' }}
+                    icon={() => (
+                        <Icon
+                            name='logout'
+                            type='material'
+                            color='white'
+                        />
+                    )}
+                />
+                :
+                <DrawerItem
+                    onPress={() => props.navigation.navigate('signin')}
+                    label="Sign In"
+                    labelStyle={{ color: 'white' }}
+                    icon={() => (
+                        <Icon
+                            name='login'
+                            type='material'
+                            color='white'
+                        />
+                    )}
+                />
+            }
         </View>
     );
 }
 
-const Drawer = () => {
+const Drawer = ({ user, signOut }) => {
+
     return (
         <>
-            <drawer.Navigator
-                drawerContent={props => <CustomDrawerContent {...props} />}
-            >
-                <drawer.Screen name="home" component={Stack} options={{
-                    title: 'Home',
-                    drawerIcon: () => <Icon
-                        name='home'
-                        type='material'
-                        color='white'
-                    />,
-                }} />
-                <drawer.Screen name="cities" component={Cities} options={{
-                    title: 'Cities',
-                    drawerIcon: () => <Icon
-                        name='public'
-                        type='material'
-                        color='white'
-                    />
-                }} />
+            <drawer.Navigator drawerContent={(props) => CustomDrawerContent({ user, props, signOut })}>
+                <drawer.Screen name="Home" component={Home} />
+                <drawer.Screen name="Cities" component={Cities} />
+                <drawer.Screen name="signup" component={SignUp} />
+                <drawer.Screen name="signin" component={SignIn} />
             </drawer.Navigator>
         </>
     )
@@ -71,7 +96,7 @@ const styles = StyleSheet.create({
     },
     userHeader: {
         borderBottomColor: 'white',
-        borderBottomWidth: 2,
+        borderBottomWidth: 0.2,
         marginLeft: 10,
         marginRight: 10,
         alignItems: 'center',
@@ -82,7 +107,23 @@ const styles = StyleSheet.create({
         width: 60,
         height: 60,
         margin: 10
+    },
+    userLogged: {
+        width: 60,
+        height: 60,
+        margin: 10,
+        borderRadius: 50
     }
 })
 
-export default Drawer
+const mapStateToProps = state => {
+    return {
+        user: state.authorReducer.userLogged
+    }
+}
+
+const mapDispatchToProps = {
+    signOut: authorActions.signOut
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Drawer)

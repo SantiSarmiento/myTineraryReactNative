@@ -4,6 +4,7 @@ import { connect, useSelector } from 'react-redux'
 import CityCard from '../components/CityCard'
 import citiesActions from '../redux/actions/citiesActions'
 import { Icon } from 'react-native-elements'
+import NavBar from '../components/NavBar'
 
 const Cities = (props) => {
 
@@ -14,13 +15,7 @@ const Cities = (props) => {
 
     return (
         <>
-            <View style={styles.header}>
-                <Icon
-                    name='menu'
-                    type='material'
-                    color='white'
-                    onPress={() => props.navigation.toggleDrawer()} />
-            </View>
+            <NavBar props={props} />
             <ImageBackground style={styles.portada} source={require('../assets/otherImg/portadacities.png')}>
             </ImageBackground>
             <View style={styles.filter}>
@@ -45,12 +40,6 @@ const Cities = (props) => {
 }
 
 const styles = StyleSheet.create({
-    header: {
-        justifyContent: 'center',
-        alignItems: 'flex-start',
-        backgroundColor: 'black',
-        padding: 10
-    },
     portada: {
         flex: 2,
         alignItems: 'center',

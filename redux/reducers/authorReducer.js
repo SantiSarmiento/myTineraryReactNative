@@ -1,17 +1,19 @@
+import AsyncStorage from '@react-native-async-storage/async-storage';
+
 const initialState = {
     userLogged: null,
 }
 
-const authorReducer = (state = initialState, action) => {
+const authorReducer =  (state = initialState, action) => {
 
     switch (action.type) {
         case 'LOG_USER':
             if (action.payload) {
-                localStorage.setItem('userLogged', JSON.stringify({
+                AsyncStorage.setItem('token', action.payload.token)
+                AsyncStorage.setItem('userLogged', JSON.stringify({
                     firstName: action.payload.firstName,
                     photoUrl: action.payload.photoUrl
                 }))
-                localStorage.setItem('token', action.payload.token)
             }
             return {
                 ...state,
@@ -19,7 +21,7 @@ const authorReducer = (state = initialState, action) => {
             }
 
         case 'SIGN_OUT':
-            localStorage.clear()
+            AsyncStorage.clear()
             return {
                 ...state,
                 userLogged: null

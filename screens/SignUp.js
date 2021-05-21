@@ -1,9 +1,14 @@
 import React, { useState } from 'react'
-import { View, Text, TextInput, StyleSheet, Alert, TouchableOpacity } from 'react-native'
+import { View, Text, TextInput, StyleSheet, Alert, TouchableOpacity, ToastAndroid } from 'react-native'
+import { Icon } from 'react-native-elements'
+import { connect } from 'react-redux'
+import NavBar from '../components/NavBar'
+import authorActions from '../redux/actions/authorActions'
 
-const SignUp = () => {
-    const [newUser, setNewUser] = useState({ firstName: '', lastName: '', email: '', password: '', photoUrl: '', country: '' })
-
+const SignUp = (props) => {
+    const [newUser, setNewUser] = useState({ firstName: '', lastName: '', email: '', password: '', photoUrl: '' })
+    const [error, setError] = useState({})
+    const errorsImput = { firstName: null, lastName: null, email: null, password: null, photoUrl: null, country: null }
 
     const readInput = (e, name) => {
         setNewUser({
@@ -12,13 +17,23 @@ const SignUp = () => {
         })
     }
 
-    const sendNewUser = () => {
-        console.log(newUser)
+    const sendNewUser = async () => {
+        const response = await props.createUser(newUser)
+        if (response) {
+            console.log(response)
+            if (response.error.details) {
+                response.error.details.map(error => {
+                    errorsImput[error.context.label] = error.message
+                    return null
+                })
+            }
+            setError(errorsImput)
+        }
     }
-
 
     return (
         <>
+            <NavBar props={props} />
             <View style={styles.sigContainer}>
                 <Text style={styles.tittle}>Sign Up</Text>
                 <View style={styles.form}>
@@ -48,13 +63,13 @@ const SignUp = () => {
                         onChangeText={(e) => readInput(e, 'photoUrl')}
                     />
                 </View>
-                <TouchableOpacity 
-                style={styles.button}
-                onPress={sendNewUser}
+                <TouchableOpacity
+                    style={styles.button}
+                    onPress={sendNewUser}
                 >
                     <Text>REGISTER</Text>
                 </TouchableOpacity>
-                <Text style={styles.text}>Already have an account ? <Text style={styles.action}>Sign In here!</Text></Text>
+                <Text style={styles.text}>Already have an account ? <Text onPress={() => props.navigation.navigate('signin')} style={styles.action}>Sign In here!</Text></Text>
             </View>
         </>
     )
@@ -101,4 +116,8 @@ const styles = StyleSheet.create({
     }
 })
 
-export default SignUp
+const mapDispatchToProps = {
+    createUser: authorActions.createUser
+}
+
+export default connect(null, mapDispatchToProps)(SignUp)

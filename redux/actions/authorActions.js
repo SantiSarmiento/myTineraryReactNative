@@ -1,5 +1,4 @@
 import axios from 'axios'
-import toast from 'react-hot-toast'
 
 const authorActions = {
 
@@ -13,7 +12,6 @@ const authorActions = {
                 type: 'LOG_USER',
                 payload: response.data.success ? response.data.response : null
             })
-            toast.success("Welcome " + response.data.response.firstName + "!")
         }
     },
 
@@ -22,28 +20,20 @@ const authorActions = {
             const response = await axios.post('https://mytinerarysarmiento.herokuapp.com/api/user/signin', userToLogin)
             if (!response.data.success) {
                 return response.data
+            } else {
+                dispatch({
+                    type: 'LOG_USER',
+                    payload: response.data.success ? response.data.response : null
+                })
+                return response.data
             }
-            dispatch({
-                type: 'LOG_USER',
-                payload: response.data.success ? response.data.response : null
-            })
-            toast.success("Welcome " + response.data.response.firstName + "!")
         }
     },
 
     signOut: () => {
+        console.log("entro")
         return (dispatch, getState) => {
             dispatch({ type: 'SIGN_OUT' })
-            toast('See you soon',
-                {
-                    icon: '👋',
-                    style: {
-                        borderRadius: '10px',
-                        background: 'white',
-                        color: 'black',
-                    },
-                }
-            );
         }
     },
 
