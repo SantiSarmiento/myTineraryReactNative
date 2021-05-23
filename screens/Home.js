@@ -1,7 +1,6 @@
 import React from 'react'
 import { Text, View, StyleSheet, Image, ImageBackground, TouchableOpacity } from 'react-native'
 import { Icon } from 'react-native-elements'
-import AsyncStorage from '@react-native-async-storage/async-storage'
 import NavBar from '../components/NavBar'
 import { connect } from 'react-redux'
 
@@ -18,14 +17,17 @@ const Home = (props) => {
                         <Text style={styles.callToActionText}>Search Cities !!</Text>
                     </TouchableOpacity>
                 </View>
-                {
-                    !props.user
-                    &&
-                    <View style={styles.signData}>
-                        <Text onPress={() => props.navigation.navigate('signup')} style={styles.infoText}>Sign up with email</Text>
-                        <Text onPress={() => props.navigation.navigate('signin')} style={styles.infoText}>Sign In</Text>
-                    </View>
-                }
+                <View style={styles.signData}>
+                    {
+                        !props.user
+                        &&
+                        <>
+                            <Text onPress={() => props.navigation.navigate('signup')} style={styles.infoText}>Sign up with email</Text>
+                            <Text onPress={() => props.navigation.navigate('signin')} style={styles.infoText}>Sign In</Text>
+                        </>
+
+                    }
+                </View>
             </ImageBackground>
         </>
     )
@@ -61,7 +63,7 @@ const styles = StyleSheet.create({
     callToActionText: {
         fontSize: 18
     },
-    signData:{
+    signData: {
         alignItems: 'center'
     }
 })

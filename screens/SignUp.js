@@ -4,6 +4,7 @@ import { Icon } from 'react-native-elements'
 import { connect } from 'react-redux'
 import NavBar from '../components/NavBar'
 import authorActions from '../redux/actions/authorActions'
+import Toast from 'react-native-toast-message'
 
 const SignUp = (props) => {
     const [newUser, setNewUser] = useState({ firstName: '', lastName: '', email: '', password: '', photoUrl: '' })
@@ -19,15 +20,24 @@ const SignUp = (props) => {
 
     const sendNewUser = async () => {
         const response = await props.createUser(newUser)
-        if (response) {
-            console.log(response)
+        if (!response.success) {
             if (response.error.details) {
                 response.error.details.map(error => {
                     errorsImput[error.context.label] = error.message
                     return null
                 })
+            } else {
+                Toast.show({
+                    type: 'error',
+                    text1: response.error,
+                    visibilityTime: 3000,
+                    autoHide: true,
+                })
             }
             setError(errorsImput)
+        } else {
+            setNewUser({ firstName: '', lastName: '', email: '', password: '', photoUrl: '' })
+            props.navigation.navigate('Home')
         }
     }
 
@@ -40,28 +50,38 @@ const SignUp = (props) => {
                     <TextInput
                         placeholder="MY FIRST NAME"
                         style={styles.input}
+                        value={newUser.firstName}
                         onChangeText={(e) => readInput(e, 'firstName')}
                     />
+                    {error.firstName ? <Text style={styles.error}>{error.firstName}</Text> : <Text></Text>}
                     <TextInput
                         placeholder="MY LAST NAME"
                         style={styles.input}
+                        value={newUser.lastName}
                         onChangeText={(e) => readInput(e, 'lastName')}
                     />
+                    {error.lastName ? <Text style={styles.error}>{error.lastName}</Text> : <Text></Text>}
                     <TextInput
                         placeholder="MY EMAIL"
                         style={styles.input}
+                        value={newUser.email}
                         onChangeText={(e) => readInput(e, 'email')}
                     />
+                    {error.email ? <Text style={styles.error}>{error.email}</Text> : <Text></Text>}
                     <TextInput
                         placeholder="MY PASSWORD"
                         style={styles.input}
+                        value={newUser.password}
                         onChangeText={(e) => readInput(e, 'password')}
                     />
+                    {error.password ? <Text style={styles.error}>{error.password}</Text> : <Text></Text>}
                     <TextInput
                         placeholder="PHOTO LINK"
                         style={styles.input}
+                        value={newUser.photoUrl}
                         onChangeText={(e) => readInput(e, 'photoUrl')}
                     />
+                    {error.photoUrl ? <Text style={styles.error}>{error.photoUrl}</Text> : <Text></Text>}
                 </View>
                 <TouchableOpacity
                     style={styles.button}
@@ -85,7 +105,7 @@ const styles = StyleSheet.create({
     input: {
         width: '100%',
         backgroundColor: 'white',
-        margin: 20,
+        margin: 13,
         padding: 7,
         letterSpacing: 1.5
     },
@@ -113,6 +133,10 @@ const styles = StyleSheet.create({
         fontWeight: 'bold',
         fontSize: 20,
         color: 'white',
+    },
+    error: {
+        color: 'red',
+        fontSize: 13
     }
 })
 

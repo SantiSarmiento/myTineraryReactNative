@@ -1,4 +1,5 @@
 import axios from 'axios'
+import Toast from 'react-native-toast-message'
 
 const authorActions = {
 
@@ -12,6 +13,13 @@ const authorActions = {
                 type: 'LOG_USER',
                 payload: response.data.success ? response.data.response : null
             })
+            Toast.show({
+                type: 'success',
+                text1: 'Welcome',
+                visibilityTime: 3000,
+                autoHide: true,
+            })
+            return response.data
         }
     },
 
@@ -25,14 +33,25 @@ const authorActions = {
                     type: 'LOG_USER',
                     payload: response.data.success ? response.data.response : null
                 })
+                Toast.show({
+                    type: 'success',
+                    text1: 'Welcome ' + response.data.response.firstName,
+                    visibilityTime: 3000,
+                    autoHide: true,
+                })
                 return response.data
             }
         }
     },
 
     signOut: () => {
-        console.log("entro")
         return (dispatch, getState) => {
+            Toast.show({
+                type: 'info',
+                text1: 'Good bye',
+                visibilityTime: 3000,
+                autoHide: true,
+            })
             dispatch({ type: 'SIGN_OUT' })
         }
     },

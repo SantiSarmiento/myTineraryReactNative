@@ -4,6 +4,7 @@ import { Icon } from 'react-native-elements'
 import { connect } from 'react-redux'
 import authorActions from '../redux/actions/authorActions'
 import NavBar from '../components/NavBar'
+import Toast from 'react-native-toast-message'
 
 const SignIn = (props) => {
     const [user, setuser] = useState({ email: '', password: '', googleUser: false })
@@ -23,11 +24,12 @@ const SignIn = (props) => {
                 setuser({ email: '', password: '', googleUser: false })
                 props.navigation.navigate('Home')
             } else {
-                ToastAndroid.showWithGravity(
-                    response.error,
-                    ToastAndroid.LONG,
-                    ToastAndroid.CENTER
-                )
+                Toast.show({
+                    type: 'error',
+                    text1: response.error,
+                    visibilityTime: 3000,
+                    autoHide: true,
+                })
             }
         }
     }

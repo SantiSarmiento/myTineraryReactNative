@@ -1,6 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import { Text, View, StyleSheet, ImageBackground, ActivityIndicator, TextInput, ScrollView } from 'react-native'
-import { connect, useSelector } from 'react-redux'
+import { connect } from 'react-redux'
 import CityCard from '../components/CityCard'
 import citiesActions from '../redux/actions/citiesActions'
 import { Icon } from 'react-native-elements'
@@ -16,8 +16,6 @@ const Cities = (props) => {
     return (
         <>
             <NavBar props={props} />
-            <ImageBackground style={styles.portada} source={require('../assets/otherImg/portadacities.png')}>
-            </ImageBackground>
             <View style={styles.filter}>
                 <Text style={styles.tittle}>Cities</Text>
                 <TextInput
@@ -26,7 +24,7 @@ const Cities = (props) => {
                     onChangeText={props.filterCities}
                 />
             </View>
-            <View style={styles.cities}>
+            <ScrollView style={styles.cities}>
                 {
                     props.cities.cities.length === 0
                         ?
@@ -34,27 +32,20 @@ const Cities = (props) => {
                         :
                         props.cities.cities.map(city => <CityCard city={city} key={city._id} />)
                 }
-            </View>
+            </ScrollView>
         </>
     )
 }
 
 const styles = StyleSheet.create({
-    portada: {
-        flex: 2,
-        alignItems: 'center',
-        justifyContent: 'center',
-    },
     filter: {
-        flex: 1,
+        flex: 0.3,
         alignItems: 'center',
         justifyContent: 'center',
         backgroundColor: '#1d1d1f'
     },
     cities: {
-        flex: 2,
-        alignItems: 'center',
-        justifyContent: 'center',
+        flex: 4,
         backgroundColor: '#1d1d1f'
     },
     input: {
