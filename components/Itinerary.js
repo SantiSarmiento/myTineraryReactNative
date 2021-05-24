@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from 'react'
+import React, { useState } from 'react'
 import NavBar from "../components/NavBar"
-import { StyleSheet, ActivityIndicator, ScrollView, ImageBackground, Text, TouchableOpacity, View, Image } from 'react-native'
+import { StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native'
 import { connect } from 'react-redux'
 import itinerariesActions from '../redux/actions/itinerariesActions'
 import { Icon } from 'react-native-elements'
 import Toast from 'react-native-toast-message'
+
 
 
 const Itinerary = (props) => {
@@ -72,8 +73,8 @@ const Itinerary = (props) => {
                     </View>
                     <Text>Durattion: {props.itinerary.duration} hs</Text>
                 </View>
-                <TouchableOpacity onPress={() => setDisplay(!display)} style={styles.button}>
-                    <Text >{display ? 'View less' : 'View more'}</Text>
+                <TouchableOpacity onPress={() => props.itineraryInfo(props.itinerary)} style={styles.button} >
+                    <Text >View more</Text>
                 </TouchableOpacity>
             </View>
         </>
@@ -83,7 +84,7 @@ const Itinerary = (props) => {
 const styles = StyleSheet.create({
     container: {
         backgroundColor: '#d8e3e7',
-        width: '90%',
+        width: '95%',
         marginBottom: 20,
         alignItems: 'center'
     },
@@ -98,7 +99,7 @@ const styles = StyleSheet.create({
         marginBottom: 5,
     },
     name: {
-        fontSize: 15,
+        fontSize: 18,
         marginBottom: 5
     },
     viewRow: {
@@ -116,15 +117,18 @@ const styles = StyleSheet.create({
         width: 100,
         height: 30,
         alignItems: 'center',
-        justifyContent: 'center'
+        justifyContent: 'center',
     }
 })
 
+const mapStateToProps = state => {
+    return {
+        user: state.authorReducer.userLogged
+    }
+}
 
 const mapDispatchToProps = {
-    sendComment: itinerariesActions.sendComment,
-    deleteComment: itinerariesActions.deleteComment,
     putLike: itinerariesActions.putLike,
     deleteLike: itinerariesActions.deleteLike
 }
-export default connect(null, mapDispatchToProps)(Itinerary)
+export default connect(mapStateToProps, mapDispatchToProps)(Itinerary)

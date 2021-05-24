@@ -1,5 +1,5 @@
 import React, { useEffect } from 'react'
-import { StyleSheet, ActivityIndicator, ScrollView, ImageBackground, Text, TouchableOpacity, View } from 'react-native'
+import { StyleSheet, ImageBackground, Text, View } from 'react-native'
 import { connect } from 'react-redux'
 import itinerariesActions from '../redux/actions/itinerariesActions'
 import Itinerary from '../components/Itinerary'
@@ -25,7 +25,7 @@ const ItineraresContainer = (props) => {
                     :
                     <View style={styles.itineraryContainer}>
                         {
-                            props.itinerariesList.map(itinerary => <Itinerary key={itinerary._id} itinerary={itinerary} user={props.user}/>)
+                            props.itinerariesList.map(itinerary => <Itinerary key={itinerary._id} itinerary={itinerary} user={props.user} itineraryInfo={props.itineraryInfo} />)
                         }
                     </View>
             }

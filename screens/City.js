@@ -10,13 +10,17 @@ import ItinerariesContainer from '../components/ItinerariesContainer'
 const City = (props) => {
     const city = props.route.params.data
 
+    const itineraryInfo = (data) => {
+        props.navigation.navigate('itinerary', { itinerary: data })
+    }
+
     return (
         <>
             <NavBar props={props} />
             <ImageBackground style={styles.photo} source={{ uri: city.photo }} ></ImageBackground>
             <ScrollView style={styles.container}>
                 <Text style={styles.text}>Available Itineraries for {city.name}</Text>
-                <ItinerariesContainer city={city} />
+                <ItinerariesContainer city={city} itineraryInfo={itineraryInfo} />
             </ScrollView>
         </>
     )
