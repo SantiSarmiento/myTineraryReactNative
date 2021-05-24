@@ -73,6 +73,7 @@ const SignUp = (props) => {
                         style={styles.input}
                         value={newUser.password}
                         onChangeText={(e) => readInput(e, 'password')}
+                        secureTextEntry={true}
                     />
                     {error.password ? <Text style={styles.error}>{error.password}</Text> : <Text></Text>}
                     <TextInput

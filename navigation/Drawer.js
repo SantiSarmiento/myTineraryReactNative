@@ -9,6 +9,7 @@ import Home from '../screens/Home'
 import SignUp from '../screens/SignUp'
 import SignIn from '../screens/SignIn'
 import authorActions from '../redux/actions/authorActions'
+import City from '../screens/City'
 
 const drawer = createDrawerNavigator()
 
@@ -84,6 +85,7 @@ const Drawer = ({ user, signOut }) => {
                 <drawer.Screen name="Cities" component={Cities} />
                 <drawer.Screen name="signup" component={SignUp} />
                 <drawer.Screen name="signin" component={SignIn} />
+                <drawer.Screen name="City" component={City} />
             </drawer.Navigator>
         </>
     )

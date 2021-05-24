@@ -2,11 +2,10 @@ import React from 'react'
 import { View, Text, ImageBackground, Image, StyleSheet } from 'react-native'
 
 const CityCard = (props) => {
-    console.log(props)
     return (
         <>
             <ImageBackground source={{ uri: props.city.photo }} style={styles.photo}>
-                <Text style={styles.text}>{props.city.name}</Text>
+                <Text onPress={() => props.goToCity(props.city)} style={styles.text}>{props.city.name}</Text>
             </ImageBackground>
         </>
     )

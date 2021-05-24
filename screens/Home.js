@@ -1,6 +1,5 @@
 import React from 'react'
 import { Text, View, StyleSheet, Image, ImageBackground, TouchableOpacity } from 'react-native'
-import { Icon } from 'react-native-elements'
 import NavBar from '../components/NavBar'
 import { connect } from 'react-redux'
 
@@ -25,7 +24,6 @@ const Home = (props) => {
                             <Text onPress={() => props.navigation.navigate('signup')} style={styles.infoText}>Sign up with email</Text>
                             <Text onPress={() => props.navigation.navigate('signin')} style={styles.infoText}>Sign In</Text>
                         </>
-
                     }
                 </View>
             </ImageBackground>

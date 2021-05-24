@@ -52,6 +52,7 @@ const SignIn = (props) => {
                         style={styles.input}
                         value={user.password}
                         onChangeText={(e) => readInput(e, 'password')}
+                        secureTextEntry={true}
                     />
                 </View>
                 <TouchableOpacity

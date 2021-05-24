@@ -1,17 +1,15 @@
-import React, { useEffect, useState } from 'react'
-import { Text, View, StyleSheet, ImageBackground, ActivityIndicator, TextInput, ScrollView } from 'react-native'
+import React from 'react'
+import { Text, View, StyleSheet, TextInput } from 'react-native'
 import { connect } from 'react-redux'
-import CityCard from '../components/CityCard'
 import citiesActions from '../redux/actions/citiesActions'
-import { Icon } from 'react-native-elements'
 import NavBar from '../components/NavBar'
+import CitiesSection from '../components/CitiesSection'
 
 const Cities = (props) => {
 
-    useEffect(() => {
-        props.getCities()
-    }, [])
-
+    const goToCity = (data) => {
+        props.navigation.navigate('City', { data })
+    }
 
     return (
         <>
@@ -24,15 +22,7 @@ const Cities = (props) => {
                     onChangeText={props.filterCities}
                 />
             </View>
-            <ScrollView style={styles.cities}>
-                {
-                    props.cities.cities.length === 0
-                        ?
-                        <ActivityIndicator size="large" color="#0000ff" />
-                        :
-                        props.cities.cities.map(city => <CityCard city={city} key={city._id} />)
-                }
-            </ScrollView>
+            <CitiesSection goToCity={goToCity} />
         </>
     )
 }
@@ -62,15 +52,9 @@ const styles = StyleSheet.create({
     }
 })
 
-const mapStateToProps = state => {
-    return {
-        cities: state.cities
-    }
-}
 
 const mapDispatchToProps = {
-    getCities: citiesActions.getCities,
     filterCities: citiesActions.filterCities
 }
 
-export default connect(mapStateToProps, mapDispatchToProps)(Cities)
+export default connect(null, mapDispatchToProps)(Cities)

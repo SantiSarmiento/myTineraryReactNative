@@ -13,8 +13,21 @@ const NavBar = (props) => {
                     color='white'
                     onPress={() => props.props.navigation.toggleDrawer()} />
                 {
-                    props.user && <Text style={styles.welcomeMsg}>Welcome {props.user.firstName}</Text>
-
+                    props.props.route.name === 'City'
+                        ?
+                        <>
+                            <View style={styles.backContainer}>
+                                <Icon
+                                    name='reply'
+                                    type='material'
+                                    color='white'
+                                    onPress={() => props.props.navigation.navigate('Cities')}
+                                />
+                                <Text style={styles.text}>Cities</Text>
+                            </View>
+                        </>
+                        :
+                        <Text style={styles.welcomeMsg}>{props.props.route.name}</Text>
                 }
             </View>
         </>
@@ -32,6 +45,15 @@ const styles = StyleSheet.create({
     welcomeMsg: {
         color: 'white',
         fontSize: 18
+    },
+    backContainer: {
+        flexDirection: 'row',
+        alignItems: 'center'
+    },
+    text: {
+        color: 'white',
+        fontSize: 18,
+        marginLeft: 5
     }
 })
 
