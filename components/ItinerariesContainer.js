@@ -25,7 +25,7 @@ const ItineraresContainer = (props) => {
                     :
                     <View style={styles.itineraryContainer}>
                         {
-                            props.itinerariesList.map(itinerary => <Itinerary key={itinerary._id} itinerary={itinerary} user={props.user} itineraryInfo={props.itineraryInfo} />)
+                            props.itinerariesList.map(itinerary => <Itinerary key={itinerary._id} itinerary={itinerary} user={props.user} />)
                         }
                     </View>
             }

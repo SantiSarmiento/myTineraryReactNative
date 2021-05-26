@@ -1,9 +1,11 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { Text, View, StyleSheet, Image, ImageBackground, TouchableOpacity } from 'react-native'
 import NavBar from '../components/NavBar'
 import { connect } from 'react-redux'
 
+
 const Home = (props) => {
+
     return (
         <>
             <NavBar props={props} />
@@ -21,7 +23,7 @@ const Home = (props) => {
                         !props.user
                         &&
                         <>
-                            <Text onPress={() => props.navigation.navigate('signup')} style={styles.infoText}>Sign up with email</Text>
+                            <Text onPress={() => props.navigation.navigate('signup')} style={styles.infoText}>Sign up</Text>
                             <Text onPress={() => props.navigation.navigate('signin')} style={styles.infoText}>Sign In</Text>
                         </>
                     }
@@ -45,7 +47,8 @@ const styles = StyleSheet.create({
     infoText: {
         fontSize: 25,
         marginBottom: 10,
-        color: 'white'
+        color: 'white',
+        fontFamily: 'Rajdhani_500Medium'
     },
     button: {
         marginTop: 5,
@@ -59,7 +62,8 @@ const styles = StyleSheet.create({
         justifyContent: 'center',
     },
     callToActionText: {
-        fontSize: 18
+        fontSize: 18,
+        fontFamily: 'Rajdhani_600SemiBold'
     },
     signData: {
         alignItems: 'center'

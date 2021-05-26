@@ -10,16 +10,19 @@ import SignUp from '../screens/SignUp'
 import SignIn from '../screens/SignIn'
 import authorActions from '../redux/actions/authorActions'
 import City from '../screens/City'
-import ItineraryInfo from '../screens/ItineraryInfo'
 
 const drawer = createDrawerNavigator()
 
 const CustomDrawerContent = ({ props, user, signOut }) => {
+
+
+
     return (
         <View style={styles.drawer}>
             <View style={styles.userHeader}>
                 {user ? <Image source={{ uri: user.photoUrl }} style={styles.userLogged} /> : <Image source={require('../assets/otherImg/login.png')} style={styles.userLogo} />}
-                {user && <Text>{user.firstName}</Text>}
+                {user && <Text style={styles.userInfo}>{user.firstName} {user.lastName}</Text>}
+                {user && <Text style={styles.userInfoEmail}>{user.email}</Text>}
             </View>
             <DrawerContentScrollView {...props}>
                 <DrawerItem
@@ -30,7 +33,7 @@ const CustomDrawerContent = ({ props, user, signOut }) => {
                             type='material'
                             color='white'
                         />)}
-                    labelStyle={{ color: 'white' }}
+                    labelStyle={{ color: 'white', fontFamily: 'Rajdhani_500Medium', fontSize: 20 }}
                     onPress={() => props.navigation.navigate('Home')}
                 />
                 <DrawerItem
@@ -41,7 +44,7 @@ const CustomDrawerContent = ({ props, user, signOut }) => {
                             type='material'
                             color='white'
                         />)}
-                    labelStyle={{ color: 'white' }}
+                    labelStyle={{ color: 'white', fontFamily: 'Rajdhani_500Medium', fontSize: 20 }}
                     onPress={() => props.navigation.navigate('Cities')}
                 />
             </DrawerContentScrollView>
@@ -50,7 +53,7 @@ const CustomDrawerContent = ({ props, user, signOut }) => {
                 <DrawerItem
                     onPress={signOut}
                     label="Sign Out"
-                    labelStyle={{ color: 'white' }}
+                    labelStyle={{ color: 'white', fontFamily: 'Rajdhani_500Medium', fontSize: 20 }}
                     icon={() => (
                         <Icon
                             name='logout'
@@ -63,7 +66,7 @@ const CustomDrawerContent = ({ props, user, signOut }) => {
                 <DrawerItem
                     onPress={() => props.navigation.navigate('signin')}
                     label="Sign In"
-                    labelStyle={{ color: 'white' }}
+                    labelStyle={{ color: 'white', fontFamily: 'Rajdhani_500Medium', fontSize: 20 }}
                     icon={() => (
                         <Icon
                             name='login'
@@ -87,7 +90,6 @@ const Drawer = ({ user, signOut }) => {
                 <drawer.Screen name="signup" component={SignUp} />
                 <drawer.Screen name="signin" component={SignIn} />
                 <drawer.Screen name="City" component={City} />
-                <drawer.Screen name="itinerary" component={ItineraryInfo} />
             </drawer.Navigator>
         </>
     )
@@ -105,19 +107,30 @@ const styles = StyleSheet.create({
         marginRight: 10,
         alignItems: 'center',
         justifyContent: 'center',
-        height: 150
     },
     userLogo: {
-        width: 60,
-        height: 60,
+        width: 100,
+        height: 100,
         margin: 10
     },
     userLogged: {
-        width: 60,
-        height: 60,
+        width: 100,
+        height: 100,
         margin: 10,
         borderRadius: 50
-    }
+    },
+    userInfo: {
+        fontSize: 25,
+        color: 'white',
+        margin: 5,
+        fontFamily: 'Rajdhani_500Medium'
+    },
+    userInfoEmail: {
+        fontSize: 18,
+        color: 'white',
+        margin: 5,
+        fontFamily: 'Rajdhani_500Medium'
+    },
 })
 
 const mapStateToProps = state => {

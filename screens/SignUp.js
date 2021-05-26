@@ -1,6 +1,5 @@
-import React, { useState } from 'react'
-import { View, Text, TextInput, StyleSheet, Alert, TouchableOpacity, ToastAndroid } from 'react-native'
-import { Icon } from 'react-native-elements'
+import React, { useEffect, useState } from 'react'
+import { View, Text, TextInput, StyleSheet, TouchableOpacity, Keyboard, TouchableWithoutFeedback } from 'react-native'
 import { connect } from 'react-redux'
 import NavBar from '../components/NavBar'
 import authorActions from '../redux/actions/authorActions'
@@ -17,6 +16,14 @@ const SignUp = (props) => {
             [name]: e
         })
     }
+
+    useEffect(() => {
+        props.navigation.addListener('blur', () => {
+            setError({})
+            setNewUser({ firstName: '', lastName: '', email: '', password: '', photoUrl: '' })
+
+        })
+    }, [])
 
     const sendNewUser = async () => {
         const response = await props.createUser(newUser)
@@ -41,57 +48,61 @@ const SignUp = (props) => {
         }
     }
 
+
+
     return (
         <>
             <NavBar props={props} />
-            <View style={styles.sigContainer}>
-                <Text style={styles.tittle}>Sign Up</Text>
-                <View style={styles.form}>
-                    <TextInput
-                        placeholder="MY FIRST NAME"
-                        style={styles.input}
-                        value={newUser.firstName}
-                        onChangeText={(e) => readInput(e, 'firstName')}
-                    />
-                    {error.firstName ? <Text style={styles.error}>{error.firstName}</Text> : <Text></Text>}
-                    <TextInput
-                        placeholder="MY LAST NAME"
-                        style={styles.input}
-                        value={newUser.lastName}
-                        onChangeText={(e) => readInput(e, 'lastName')}
-                    />
-                    {error.lastName ? <Text style={styles.error}>{error.lastName}</Text> : <Text></Text>}
-                    <TextInput
-                        placeholder="MY EMAIL"
-                        style={styles.input}
-                        value={newUser.email}
-                        onChangeText={(e) => readInput(e, 'email')}
-                    />
-                    {error.email ? <Text style={styles.error}>{error.email}</Text> : <Text></Text>}
-                    <TextInput
-                        placeholder="MY PASSWORD"
-                        style={styles.input}
-                        value={newUser.password}
-                        onChangeText={(e) => readInput(e, 'password')}
-                        secureTextEntry={true}
-                    />
-                    {error.password ? <Text style={styles.error}>{error.password}</Text> : <Text></Text>}
-                    <TextInput
-                        placeholder="PHOTO LINK"
-                        style={styles.input}
-                        value={newUser.photoUrl}
-                        onChangeText={(e) => readInput(e, 'photoUrl')}
-                    />
-                    {error.photoUrl ? <Text style={styles.error}>{error.photoUrl}</Text> : <Text></Text>}
+            <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+                <View style={styles.sigContainer}>
+                    <Text style={styles.tittle}>Sign Up</Text>
+                    <View style={styles.form}>
+                        <TextInput
+                            placeholder="MY FIRST NAME"
+                            style={styles.input}
+                            value={newUser.firstName}
+                            onChangeText={(e) => readInput(e, 'firstName')}
+                        />
+                        {error.firstName ? <Text style={styles.error}>{error.firstName}</Text> : <Text></Text>}
+                        <TextInput
+                            placeholder="MY LAST NAME"
+                            style={styles.input}
+                            value={newUser.lastName}
+                            onChangeText={(e) => readInput(e, 'lastName')}
+                        />
+                        {error.lastName ? <Text style={styles.error}>{error.lastName}</Text> : <Text></Text>}
+                        <TextInput
+                            placeholder="MY EMAIL"
+                            style={styles.input}
+                            value={newUser.email}
+                            onChangeText={(e) => readInput(e, 'email')}
+                        />
+                        {error.email ? <Text style={styles.error}>{error.email}</Text> : <Text></Text>}
+                        <TextInput
+                            placeholder="MY PASSWORD"
+                            style={styles.input}
+                            value={newUser.password}
+                            onChangeText={(e) => readInput(e, 'password')}
+                            secureTextEntry={true}
+                        />
+                        {error.password ? <Text style={styles.error}>{error.password}</Text> : <Text></Text>}
+                        <TextInput
+                            placeholder="PHOTO LINK"
+                            style={styles.input}
+                            value={newUser.photoUrl}
+                            onChangeText={(e) => readInput(e, 'photoUrl')}
+                        />
+                        {error.photoUrl ? <Text style={styles.error}>{error.photoUrl}</Text> : <Text></Text>}
+                    </View>
+                    <TouchableOpacity
+                        style={styles.button}
+                        onPress={sendNewUser}
+                    >
+                        <Text style={styles.buttonText}>REGISTER</Text>
+                    </TouchableOpacity>
+                    <Text style={styles.text}>Already have an account ? <Text onPress={() => props.navigation.navigate('signin')} style={styles.action}>Sign In here!</Text></Text>
                 </View>
-                <TouchableOpacity
-                    style={styles.button}
-                    onPress={sendNewUser}
-                >
-                    <Text>REGISTER</Text>
-                </TouchableOpacity>
-                <Text style={styles.text}>Already have an account ? <Text onPress={() => props.navigation.navigate('signin')} style={styles.action}>Sign In here!</Text></Text>
-            </View>
+            </TouchableWithoutFeedback>
         </>
     )
 }
@@ -101,14 +112,15 @@ const styles = StyleSheet.create({
         alignItems: 'center',
         justifyContent: 'center',
         flex: 1,
-        backgroundColor: '#1d1d1f'
+        backgroundColor: '#DDDDDD'
     },
     input: {
         width: '100%',
         backgroundColor: 'white',
         margin: 13,
         padding: 7,
-        letterSpacing: 1.5
+        letterSpacing: 1.5,
+        fontFamily: 'Rajdhani_500Medium'
     },
     form: {
         width: '90%',
@@ -116,7 +128,8 @@ const styles = StyleSheet.create({
     },
     tittle: {
         fontSize: 30,
-        color: 'white'
+        color: 'black',
+        fontFamily: 'Rajdhani_500Medium'
     },
     button: {
         borderWidth: 2,
@@ -125,15 +138,20 @@ const styles = StyleSheet.create({
         paddingVertical: 10,
         paddingHorizontal: 30
     },
+    buttonText: {
+        fontFamily: 'Rajdhani_500Medium',
+        fontSize: 18
+    },
     text: {
         marginTop: 20,
-        color: 'white',
-        fontSize: 17
+        color: 'black',
+        fontSize: 17,
+        fontFamily: 'Rajdhani_500Medium',
     },
     action: {
         fontWeight: 'bold',
         fontSize: 20,
-        color: 'white',
+        color: 'blue',
     },
     error: {
         color: 'red',

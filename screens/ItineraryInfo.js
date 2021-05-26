@@ -11,17 +11,24 @@ import MyCarousel from '../components/MyCarousel'
 import Comment from '../components/Comment'
 
 const Itinerary = (props) => {
-    const itineraryId = props.route.params.itinerary._id
-    const itinerary = props.itinerariesList.find(itinerary => itinerary._id === itineraryId)
-    console.log(itinerary)
+    const [itinerary, setItinerary] = useState()
     const [display, setDisplay] = useState(false)
     const [flag, setFlag] = useState(false)
     const userId = props.user && props.user._id
-    const data = { itineraryId, userId }
+    const data = { itineraryId: props.route.params.itinerary._id, userId }
     const [activities, setActivities] = useState([])
     const [newComment, setNewComment] = useState('')
+    const hearth = itinerary && props.user && itinerary.likes.find(like => like.user === props.user._id) ? 'favorite' : 'favorite-border'
 
-    const hearth = props.user && itinerary.likes.find(like => like.user === props.user._id) ? 'favorite' : 'favorite-border'
+    useEffect(() => {
+        props.navigation.addListener('focus', () => {
+            console.log("entro aca")
+            setItinerary(props.itinerariesList.find(itinerary => itinerary._id === props.route.params.itinerary._id))
+        })
+        props.navigation.addListener('blur', () => {
+            setItinerary(null)
+        })
+    }, [])
 
     const setLike = async () => {
         if (props.user) {
@@ -61,6 +68,14 @@ const Itinerary = (props) => {
         const text = e
         setNewComment(text)
         console.log(newComment)
+    }
+
+    const disableInput = props.user ? true : false
+    const textInput = props.user ? 'Leave a comment' : 'You most be logged to comment'
+
+
+    if (!itinerary) {
+        return null
     }
 
     return (
@@ -106,14 +121,15 @@ const Itinerary = (props) => {
                         <View style={styles.commentInputContainer}>
                             <View style={styles.comments}>
                                 {
-                                    itinerary.comments.map(comment => <Comment key={comment._id} comment={comment} itinerary={props.route.params.itinerary._id} />)
+                                    itinerary.comments.map(comment => <Comment key={comment._id} comment={comment} itinerary={itinerary._id} />)
                                 }
                             </View>
                             <TextInput
-                                placeholder="MY FIRST NAME"
+                                placeholder={textInput}
                                 style={styles.input}
                                 value={newComment}
                                 onChangeText={(e) => readInput(e)}
+                                editable={disableInput}
                             />
                         </View>
                     </View>

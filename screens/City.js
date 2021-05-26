@@ -10,17 +10,12 @@ import ItinerariesContainer from '../components/ItinerariesContainer'
 const City = (props) => {
     const city = props.route.params.data
 
-    const itineraryInfo = (data) => {
-        props.navigation.navigate('itinerary', { itinerary: data })
-    }
-
     return (
         <>
             <NavBar props={props} />
-            <ImageBackground style={styles.photo} source={{ uri: city.photo }} ></ImageBackground>
             <ScrollView style={styles.container}>
                 <Text style={styles.text}>Available Itineraries for {city.name}</Text>
-                <ItinerariesContainer city={city} itineraryInfo={itineraryInfo} />
+                <ItinerariesContainer city={city}/>
             </ScrollView>
         </>
     )
@@ -29,7 +24,7 @@ const City = (props) => {
 const styles = StyleSheet.create({
     photo: {
         width: '100%',
-        height: 210,
+        height: 150,
         justifyContent: 'flex-end',
         alignItems: 'center',
     },
@@ -38,7 +33,8 @@ const styles = StyleSheet.create({
         width: '100%',
         textAlign: 'center',
         color: 'white',
-        margin: 10
+        margin: 10,
+        fontFamily: 'Rajdhani_500Medium'
     },
     container: {
         backgroundColor: '#1d1d1f'

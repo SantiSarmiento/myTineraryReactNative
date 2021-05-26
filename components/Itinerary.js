@@ -1,11 +1,15 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import NavBar from "../components/NavBar"
-import { StyleSheet, Text, TouchableOpacity, View, Image } from 'react-native'
+import { StyleSheet, Text, TouchableOpacity, View, Image, TextInput, ScrollView } from 'react-native'
 import { connect } from 'react-redux'
 import itinerariesActions from '../redux/actions/itinerariesActions'
 import { Icon } from 'react-native-elements'
 import Toast from 'react-native-toast-message'
-
+import Carousel from 'react-native-snap-carousel'
+import axios from 'axios'
+import MyCarousel from '../components/MyCarousel'
+import Comment from '../components/Comment'
+import AsyncStorage from '@react-native-async-storage/async-storage'
 
 
 const Itinerary = (props) => {
@@ -14,8 +18,14 @@ const Itinerary = (props) => {
     const itineraryId = props.itinerary._id
     const userId = props.user && props.user._id
     const data = { itineraryId, userId }
-
+    const [newComment, setNewComment] = useState('')
+    const [activities, setActivities] = useState()
     const hearth = props.user && props.itinerary.likes.find(like => like.user === props.user._id) ? 'favorite' : 'favorite-border'
+
+    useEffect(() => {
+        axios.get('https://mytinerarysarmiento.herokuapp.com/api/activities/' + props.itinerary._id)
+            .then(response => setActivities(response.data.response.activities))
+    }, [])
 
     const setLike = async () => {
         if (props.user) {
@@ -43,15 +53,62 @@ const Itinerary = (props) => {
         }
     }
 
+    const disableInput = props.user ? true : false
+    const textInput = props.user ? 'Leave a comment' : 'You most be logged to comment'
+
+
+
+    const changeView = () => {
+        setDisplay(!display)
+    }
+
+    const readInput = e => {
+        const text = e
+        setNewComment(text)
+    }
+
+    const sendMessage = async () => {
+        if (props.user) {
+
+            if (newComment.trim() !== '') {
+                const data = {
+                    message: newComment,
+                    id: props.itinerary._id,
+                    token: await AsyncStorage.getItem('token')
+                }
+                await props.sendComment(data)
+                setNewComment('')
+            } else {
+                Toast.show({
+                    type: 'error',
+                    text1: 'You cant send and empyt comment',
+                    visibilityTime: 3000,
+                    autoHide: true,
+                })
+            }
+        } else {
+            Toast.show({
+                type: 'info',
+                text1: 'You most be logged to comment',
+                visibilityTime: 3000,
+                autoHide: true,
+            })
+        }
+    }
+
+    const deleteComment = async (data) => {
+        props.deleteComment(data)
+    }
+
     return (
         <>
             <View style={styles.container}>
-                <Text style={styles.tittle}>{props.itinerary.tittle}</Text>
+                <Text style={styles.tittle} >{props.itinerary.tittle}</Text>
                 <Image source={{ uri: props.itinerary.authorPhoto }} style={styles.authorPhoto} />
                 <Text style={styles.name}>{props.itinerary.authorName}</Text>
                 <View style={styles.viewRow}>
                     <View style={styles.viewRow}>
-                        <Text>{props.itinerary.likes.length}</Text>
+                        <Text style={styles.categoryText}>{props.itinerary.likes.length}</Text>
                         <Icon
                             name={hearth}
                             type='material'
@@ -60,7 +117,7 @@ const Itinerary = (props) => {
                         />
                     </View>
                     <View style={styles.viewRow}>
-                        <Text>Price: </Text>
+                        <Text style={styles.categoryText}>Price: </Text>
                         {
                             [...Array(props.itinerary.price)].map((money, index) =>
                                 <Icon
@@ -71,26 +128,62 @@ const Itinerary = (props) => {
                                 />)
                         }
                     </View>
-                    <Text>Durattion: {props.itinerary.duration} hs</Text>
+                    <Text style={styles.categoryText}>Durattion: {props.itinerary.duration} hs</Text>
                 </View>
-                <TouchableOpacity onPress={() => props.itineraryInfo(props.itinerary)} style={styles.button} >
-                    <Text >View more</Text>
+                <View style={!display ? { display: 'none' } : { width: '100%' }}>
+                    <View>
+                        <View>
+                            <Text style={styles.commentText}>Activities: </Text>
+                            <View>
+                                <MyCarousel activities={activities} />
+                            </View>
+                        </View >
+                        <View style={styles.commentContainer}>
+                            <Text style={styles.commentText}>Comments</Text>
+                            <View style={styles.commentInputContainer}>
+                                <ScrollView style={styles.comments}>
+                                    {
+                                        props.itinerary.comments.map(comment => <Comment key={comment._id} comment={comment} itinerary={props.itinerary._id} deleteComment={deleteComment} />)
+                                    }
+                                </ScrollView>
+                                <View style={styles.viewRow}>
+                                    <TextInput
+                                        placeholder={textInput}
+                                        style={styles.input}
+                                        value={newComment}
+                                        onChangeText={(e) => readInput(e)}
+                                        editable={disableInput}
+                                    />
+                                    <Icon
+                                        name='send'
+                                        type='material'
+                                        color='white'
+                                        onPress={() => sendMessage()}
+                                    />
+                                </View>
+                            </View>
+                        </View>
+                    </View >
+                </View >
+                <TouchableOpacity onPress={() => changeView()} style={styles.button} >
+                    <Text >{display ? 'View Less' : 'View more'}</Text>
                 </TouchableOpacity>
-            </View>
+            </View >
         </>
     )
 }
 
 const styles = StyleSheet.create({
     container: {
-        backgroundColor: '#d8e3e7',
+        backgroundColor: '#dddddd',
         width: '95%',
         marginBottom: 20,
         alignItems: 'center'
     },
     tittle: {
-        fontSize: 20,
-        marginBottom: 5
+        fontSize: 30,
+        marginBottom: 5,
+        fontFamily: 'Rajdhani_500Medium'
     },
     authorPhoto: {
         width: 80,
@@ -99,8 +192,13 @@ const styles = StyleSheet.create({
         marginBottom: 5,
     },
     name: {
-        fontSize: 18,
-        marginBottom: 5
+        fontSize: 25,
+        marginBottom: 5,
+        fontFamily: 'Rajdhani_500Medium'
+    },
+    categoryText: {
+        fontFamily: 'Rajdhani_500Medium',
+        fontSize: 18
     },
     viewRow: {
         flexDirection: 'row',
@@ -118,6 +216,32 @@ const styles = StyleSheet.create({
         height: 30,
         alignItems: 'center',
         justifyContent: 'center',
+    },
+    commentContainer: {
+        width: '100%',
+    },
+    comments: {
+        minHeight: 200
+    },
+    commentText: {
+        fontSize: 18,
+        backgroundColor: 'black',
+        color: 'white',
+        textAlign: 'center',
+    },
+    commentInputContainer: {
+        backgroundColor: '#0d1f41',
+        marginBottom: 5,
+    },
+    input: {
+        width: '90%',
+        color: 'black',
+        backgroundColor: 'white',
+        padding: 5,
+        borderRadius: 25,
+        marginBottom: 5,
+        marginTop: 5,
+        marginRight: 20
     }
 })
 
@@ -129,6 +253,8 @@ const mapStateToProps = state => {
 
 const mapDispatchToProps = {
     putLike: itinerariesActions.putLike,
-    deleteLike: itinerariesActions.deleteLike
+    deleteLike: itinerariesActions.deleteLike,
+    sendComment: itinerariesActions.sendComment,
+    deleteComment: itinerariesActions.deleteComment,
 }
 export default connect(mapStateToProps, mapDispatchToProps)(Itinerary)

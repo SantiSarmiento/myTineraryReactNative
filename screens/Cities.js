@@ -1,5 +1,5 @@
 import React from 'react'
-import { Text, View, StyleSheet, TextInput } from 'react-native'
+import { Text, View, StyleSheet, TextInput, Keyboard, TouchableWithoutFeedback } from 'react-native'
 import { connect } from 'react-redux'
 import citiesActions from '../redux/actions/citiesActions'
 import NavBar from '../components/NavBar'
@@ -14,14 +14,16 @@ const Cities = (props) => {
     return (
         <>
             <NavBar props={props} />
-            <View style={styles.filter}>
-                <Text style={styles.tittle}>Cities</Text>
-                <TextInput
-                    placeholder="Search cities !!"
-                    style={styles.input}
-                    onChangeText={props.filterCities}
-                />
-            </View>
+            <TouchableWithoutFeedback onPress={() => Keyboard.dismiss()}>
+                <View style={styles.filter}>
+                    <Text style={styles.tittle}>Cities</Text>
+                    <TextInput
+                        placeholder="Search cities !!"
+                        style={styles.input}
+                        onChangeText={props.filterCities}
+                    />
+                </View>
+            </TouchableWithoutFeedback>
             <CitiesSection goToCity={goToCity} />
         </>
     )
@@ -39,16 +41,18 @@ const styles = StyleSheet.create({
         backgroundColor: '#1d1d1f'
     },
     input: {
-        width: '80%',
+        width: '95%',
         backgroundColor: 'white',
         margin: 20,
         padding: 7,
         letterSpacing: 1.5,
-        borderRadius: 25
+        borderRadius: 25,
+        fontFamily: 'Rajdhani_500Medium'
     },
     tittle: {
         color: 'white',
-        fontSize: 30
+        fontSize: 35,
+        fontFamily: 'Rajdhani_500Medium'
     }
 })
 

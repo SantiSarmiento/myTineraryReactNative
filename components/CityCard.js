@@ -1,7 +1,9 @@
 import React from 'react'
-import { View, Text, ImageBackground, Image, StyleSheet } from 'react-native'
+import { Text, ImageBackground, StyleSheet } from 'react-native'
 
 const CityCard = (props) => {
+
+
     return (
         <>
             <ImageBackground source={{ uri: props.city.photo }} style={styles.photo}>
@@ -20,11 +22,12 @@ const styles = StyleSheet.create({
         marginBottom: 5
     },
     text: {
-        fontSize: 20,
+        fontSize: 25,
         width: '100%',
         textAlign: 'center',
         backgroundColor: 'black',
-        color: 'white'
+        color: 'white',
+        fontFamily: 'Rajdhani_500Medium'
     }
 })
 
