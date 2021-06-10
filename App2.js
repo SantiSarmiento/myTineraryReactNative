@@ -9,11 +9,9 @@ import authorActions from './redux/actions/authorActions'
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import {
     useFonts,
-    Rajdhani_300Light,
     Rajdhani_400Regular,
     Rajdhani_500Medium,
     Rajdhani_600SemiBold,
-    Rajdhani_700Bold
 } from '@expo-google-fonts/rajdhani'
 import AppLoading from 'expo-app-loading'
 
